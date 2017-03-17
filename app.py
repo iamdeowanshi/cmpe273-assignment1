@@ -3,19 +3,14 @@ from github import Github, GithubException
 
 import sys
 import os
-import getpass
 
 template_dir = os.path.abspath('./html')
 app = Flask(__name__, template_folder=template_dir)
 
-username = ""
-pw = ""
-
-
 @app.route("/v1/<filename>")
 def showMessage(filename):
     try:
-        g = Github(username, pw)
+        g = Github()
 
         repo_url = str(sys.argv[1]).split("/")
 
@@ -47,6 +42,4 @@ def hello():
 
 
 if __name__ == "__main__":
-    username = raw_input("Github Username:")
-    pw = getpass.getpass()
     app.run(debug=False, host='0.0.0.0')
