@@ -1,5 +1,5 @@
 from flask import Flask,render_template
-from github import Github
+from github import Github, GithubException
 
 import sys,os
 
@@ -8,12 +8,16 @@ app = Flask(__name__, template_folder=template_dir)
 
 @app.route("/v1/<filename>")
 def showMessage(filename):
-    g = Github()
-    repo_url = str(sys.argv[1]).split("/")
+    try:
+        g = Github()
+        repo_url = str(sys.argv[1]).split("/")
 
-    repo = g.get_user(repo_url[3]).get_repo(repo_url[4])
+        repo = g.get_user(repo_url[3]).get_repo(repo_url[4])
 
-    file = repo.get_file_contents(filename)
+        file = repo.get_file_contents(filename)
+
+    except GithubException as err:
+        return err
 
     if file is None:
         page_not_found
